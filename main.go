@@ -13,6 +13,19 @@ func must(err error) {
 	}
 }
 
+func child() {
+	fmt.Printf("Running %v as PID %d\n", os.Args[2:], os.Getpid())
+
+	cmd := exec.Command(os.Args[2], os.Args[3:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	must(syscall.Chroot("/home/lubuntu/Projects/make-sense-of-containers/lubuntu-fs"))
+	must(syscall.Chdir("/"))
+	must(cmd.Run())
+}
+
 func run() {
 	cmd := exec.Command("/proc/self/exe", append([]string{"child"}, os.Args[2:]...)...)
 	cmd.Stdin = os.Stdin
@@ -22,17 +35,6 @@ func run() {
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID,
 	}
-
-	must(cmd.Run())
-}
-
-func child() {
-	fmt.Printf("Running %v as PID %d\n", os.Args[2:], os.Getpid())
-
-	cmd := exec.Command(os.Args[2], os.Args[3:]...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
 	must(cmd.Run())
 }
