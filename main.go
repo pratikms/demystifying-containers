@@ -24,7 +24,10 @@ func child() {
 	must(syscall.Chroot("/home/lubuntu/Projects/make-sense-of-containers/lubuntu-fs"))
 	must(syscall.Chdir("/"))
 	must(syscall.Mount("proc", "proc", "proc", 0, ""))
+
 	must(cmd.Run())
+
+	must(syscall.Unmount("/proc", 0))
 }
 
 func run() {
