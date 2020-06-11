@@ -21,6 +21,7 @@ func child() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
+	must(syscall.Sethostname([]byte("container")))
 	must(syscall.Chroot("/home/lubuntu/Projects/make-sense-of-containers/lubuntu-fs"))
 	must(syscall.Chdir("/"))
 	must(syscall.Mount("proc", "proc", "proc", 0, ""))
