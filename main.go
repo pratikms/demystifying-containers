@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strconv"
 	"syscall"
 )
 
@@ -13,8 +16,23 @@ func must(err error) {
 	}
 }
 
+func cg() {
+	cgroups := "/sys/fs/cgroup/"
+	pids := filepath.Join(cgroups, "pids")
+	err := os.Mkdir(filepath.Join(pids, "pratikms"), 0755)
+	if err != nil && !os.IsExist(err) {
+		panic(err)
+	}
+	must(ioutil.WriteFile(filepath.Join(pids, "pratikms/pids.max"), []byte("20"), 0700))
+	// Remove the new cgroup after container exits
+	must(ioutil.WriteFile(filepath.Join(pids, "pratikms/notify_on_release"), []byte("1"), 0700))
+	must(ioutil.WriteFile(filepath.Join(pids, "pratikms/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
+}
+
 func child() {
 	fmt.Printf("Running %v as PID %d\n", os.Args[2:], os.Getpid())
+
+	cg()
 
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
