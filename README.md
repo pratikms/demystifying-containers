@@ -9,7 +9,7 @@ Go needs to be installed.
 ## How to use
 
 To clone:  
-`git clone https://github.com/pratikms/making-sense-of-containers.git`
+`git clone https://github.com/pratikms/demystifying-containers.git`
 
 To run:  
 `go run main.go run bash`
