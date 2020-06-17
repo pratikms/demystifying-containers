@@ -1,4 +1,4 @@
-# making-sense-of-containers
+# Demystifying Containers
 
 The source code of the concepts covered in the blog post: [Demystifying Containers](https://blog.pratikms.com/demystifying-containers-ckbjqjqa202640ns1vo369ufu)
 
